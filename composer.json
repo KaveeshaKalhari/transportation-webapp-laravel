@@ -1,0 +1,6 @@
+{
+    "require": {
+        "fruitcake/laravel-cors": "^3.0",
+        "fideloper/proxy": "^4.4"
+    }
+}
