@@ -9,3 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/data', [DataController::class, 'index']);
+Route::post('/data', [DataController::class, 'store']);
+Route::put('/data/{id}', [DataController::class, 'update']);
+Route::delete('/data/{id}', [DataController::class, 'destroy']);
