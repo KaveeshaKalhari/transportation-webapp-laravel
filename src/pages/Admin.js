@@ -10,6 +10,7 @@ const Admin = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [editingId, setEditingId] = useState(null);  // Track which data is being edited
 
   useEffect(() => {
     // Fetch all data when the component mounts
@@ -37,18 +38,16 @@ const Admin = () => {
       .then((response) => {
         setMessage('Data added successfully!');
         setData([...data, response.data]); // Add new data to the list
-        setVehicleType('');
-        setLicensePlate('');
-        setDriverName('');
-        setLatitude('');
-        setLongitude('');
+        resetForm();
       })
       .catch((error) => {
         setError('Error adding data');
       });
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = (e) => {
+    e.preventDefault();
+
     const updatedData = {
       vehicle_type: vehicleType,
       license_plate: licensePlate,
@@ -57,13 +56,14 @@ const Admin = () => {
       longitude: parseFloat(longitude),
     };
 
-    axios.put(`http://localhost:8000/api/data/${id}`, updatedData)
+    axios.put(`http://localhost:8000/api/data/${editingId}`, updatedData)
       .then((response) => {
         setMessage('Data updated successfully!');
         const updatedList = data.map(item =>
-          item.id === id ? response.data : item
+          item.id === editingId ? response.data : item
         );
         setData(updatedList); // Update the data list
+        resetForm();
       })
       .catch((error) => {
         setError('Error updating data');
@@ -82,15 +82,33 @@ const Admin = () => {
       });
   };
 
+  const handleEdit = (item) => {
+    setEditingId(item.id);  // Set the ID of the data being edited
+    setVehicleType(item.vehicle_type);
+    setLicensePlate(item.license_plate);
+    setDriverName(item.driver_name);
+    setLatitude(item.latitude);
+    setLongitude(item.longitude);
+  };
+
+  const resetForm = () => {
+    setEditingId(null);  // Clear editing state
+    setVehicleType('');
+    setLicensePlate('');
+    setDriverName('');
+    setLatitude('');
+    setLongitude('');
+  };
+
   return (
     <div>
-      <h2>Admin Panel - Add Vehicle Data</h2>
+      <h2>Admin Panel - Manage Vehicle Data</h2>
 
       {message && <p style={{ color: 'green' }}>{message}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {/* Form for adding data */}
-      <form onSubmit={handleCreate}>
+      {/* Form for adding or updating data */}
+      <form onSubmit={editingId ? handleUpdate : handleCreate}>
         <div>
           <label>Vehicle Type:</label>
           <input
@@ -137,7 +155,7 @@ const Admin = () => {
           />
         </div>
 
-        <button type="submit">Add Data</button>
+        <button type="submit">{editingId ? 'Update Data' : 'Add Data'}</button>
       </form>
 
       {/* Display all data */}
@@ -151,8 +169,8 @@ const Admin = () => {
             <p>Latitude: {item.latitude}</p>
             <p>Longitude: {item.longitude}</p>
 
-            {/* Update and Delete buttons */}
-            <button onClick={() => handleUpdate(item.id)}>Update</button>
+            {/* Edit and Delete buttons */}
+            <button onClick={() => handleEdit(item)}>Edit</button>
             <button onClick={() => handleDelete(item.id)}>Delete</button>
           </div>
         ))}
