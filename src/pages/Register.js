@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const SignupPage = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [role, setRole] = useState("user");
+  const [error, setError] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
   // Handle the form submission
@@ -16,30 +17,31 @@ const SignupPage = () => {
 
     // Validate that passwords match
     if (password !== passwordConfirmation) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     try {
       // Send request to backend API
-      const response = await axios.post('http://localhost:8000/api/register', {
+      const response = await axios.post("http://localhost:8000/api/register", {
         name,
         email,
         password,
         password_confirmation: passwordConfirmation, // Send password confirmation as well
+        role,
       });
 
       // Save the token to localStorage
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem("token", response.data.token);
 
       // Redirect to the dashboard after successful signup
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err) {
       // Handle errors from the backend, possibly showing validation error messages
       if (err.response) {
-        setError(err.response.data.message || 'Error registering user');
+        setError(err.response.data.message || "Error registering user");
       } else {
-        setError('An unexpected error occurred');
+        setError("An unexpected error occurred");
       }
     }
   };
@@ -84,10 +86,36 @@ const SignupPage = () => {
             required
           />
         </div>
+        <div>
+          <label>Role</label>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="role"
+                value="user"
+                checked={role === "user"}
+                onChange={(e) => setRole(e.target.value)}
+              />
+              User
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="role"
+                value="admin"
+                checked={role === "admin"}
+                onChange={(e) => setRole(e.target.value)}
+              />
+              Admin
+            </label>
+          </div>
+        </div>
+
         <button type="submit">Signup</button>
       </form>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };
