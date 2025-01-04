@@ -18,7 +18,7 @@ const Login = () => {
 
   const handleRoleChange = (e) => {
     setCredentials({ ...credentials, role: e.target.value });
-  };
+   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,26 +27,29 @@ const Login = () => {
 
       // Save the token in localStorage
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('role', response.data.user.role);
+      navigate('/dashboard');
 
       // Redirect based on role
       if (response.data.role === 'admin') {
-        navigate('/admin-dashboard');
-      } else {
+       navigate('/admin-dashboard');
+       } else {
         navigate('/dashboard');
-      }
+       }
     } catch (err) {
-      if (err.response) {
-        const { status, data } = err.response;
-        if (status === 401) {
-          setError('Invalid credentials. Please check your email or password.');
-        } else if (status === 403) {
-          setError(data.message || 'Unauthorized access.');
-        } else {
-          setError('An error occurred. Please try again.');
-        }
-      } else {
-        setError('Unable to connect to the server. Please try again later.');
-      }
+      setError('Error logging in');
+      // if (err.response) {
+      //   const { status, data } = err.response;
+      //   if (status === 401) {
+      //     setError('Invalid credentials. Please check your email or password.');
+      //   } else if (status === 403) {
+      //     setError(data.message || 'Unauthorized access.');
+      //   } else {
+      //     setError('An error occurred. Please try again.');
+      //   }
+      // } else {
+      //   setError('Unable to connect to the server. Please try again later.');
+      // }
     }
   };
 
@@ -74,7 +77,7 @@ const Login = () => {
         />
 
         {/* Role Selection */}
-        <div style={{ marginBottom: '20px', fontSize: '16px' }}>
+        {/* <div style={{ marginBottom: '20px', fontSize: '16px' }}>
           <label style={{ marginRight: '10px' }}>
             <input
               type="radio"
@@ -95,7 +98,7 @@ const Login = () => {
             />
             Admin
           </label>
-        </div>
+        </div> */}
 
         <button type="submit" style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', fontSize: '16px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
           Login

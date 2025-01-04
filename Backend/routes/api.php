@@ -13,6 +13,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('auth.login')->mid
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/data', [DataController::class, 'index'])->name('data.index');
+    
     Route::get('/protected-data', [DataController::class, 'show'])->name('data.show');
     Route::post('/data', [DataController::class, 'store'])->name('data.store');
     Route::put('/data/{id}', [DataController::class, 'update'])->name('data.update');

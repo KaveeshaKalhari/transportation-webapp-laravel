@@ -15,8 +15,12 @@ class DataController extends Controller
      */
     public function index()
     {
-        $data = Data::all(); // Get all data records
-        return response()->json($data); // Return the data as JSON
+        return Data::all(); // Get all data records
+    }
+
+    public function show($id)
+    {
+        return Data::findOrFail($id);
     }
 
     /**

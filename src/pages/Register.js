@@ -35,13 +35,13 @@ const SignupPage = () => {
       localStorage.setItem("token", response.data.token);
 
       // Redirect to the dashboard after successful signup
-      navigate("/dashboard");
+      navigate("/Dashboard");
     } catch (err) {
       // Handle errors from the backend, possibly showing validation error messages
-      if (err.response) {
-        setError(err.response.data.message || "Error registering user");
+      if (err.response && err.response.data.errors) {
+        setError(Object.values(err.response.data.errors).flat().join(' '));
       } else {
-        setError("An unexpected error occurred");
+        setError('Error registering user');
       }
     }
   };
@@ -86,7 +86,7 @@ const SignupPage = () => {
             required
           />
         </div>
-        <div>
+        {/* <div>
           <label>Role</label>
           <div>
             <label>
@@ -110,7 +110,7 @@ const SignupPage = () => {
               Admin
             </label>
           </div>
-        </div>
+        </div> */}
 
         <button type="submit">Signup</button>
       </form>

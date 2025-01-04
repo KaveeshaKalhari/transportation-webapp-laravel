@@ -13,13 +13,12 @@ const Admin = () => {
   const [editingId, setEditingId] = useState(null);  // Track which data is being edited
 
   useEffect(() => {
-    // Fetch all data when the component mounts
     axios.get('http://localhost:8000/api/data')
       .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
-        setError('Error fetching data');
+      setError('Error fetching data');
       });
   }, []);
 
@@ -99,7 +98,7 @@ const Admin = () => {
     setLatitude('');
     setLongitude('');
   };
-
+ 
   return (
     <div>
       <h2>Admin Panel - Manage Vehicle Data</h2>
@@ -107,7 +106,6 @@ const Admin = () => {
       {message && <p style={{ color: 'green' }}>{message}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {/* Form for adding or updating data */}
       <form onSubmit={editingId ? handleUpdate : handleCreate}>
         <div>
           <label>Vehicle Type:</label>
@@ -158,7 +156,6 @@ const Admin = () => {
         <button type="submit">{editingId ? 'Update Data' : 'Add Data'}</button>
       </form>
 
-      {/* Display all data */}
       <h3>Existing Vehicle Data</h3>
       <div>
         {data.map((item) => (
@@ -169,7 +166,6 @@ const Admin = () => {
             <p>Latitude: {item.latitude}</p>
             <p>Longitude: {item.longitude}</p>
 
-            {/* Edit and Delete buttons */}
             <button onClick={() => handleEdit(item)}>Edit</button>
             <button onClick={() => handleDelete(item.id)}>Delete</button>
           </div>
