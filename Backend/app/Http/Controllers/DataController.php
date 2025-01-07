@@ -15,12 +15,8 @@ class DataController extends Controller
      */
     public function index()
     {
-        return Data::all(); // Get all data records
-    }
-
-    public function show($id)
-    {
-        return Data::findOrFail($id);
+        $data = Data::all(); // Get all data records
+        return response()->json($data); // Return the data as JSON
     }
 
     /**
@@ -123,5 +119,24 @@ class DataController extends Controller
 
         // Return success response
         return response()->json(['message' => 'Data deleted successfully!'], 200);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        // Your logic to retrieve and return the data
+        // For example:
+        $data = Data::find($id);
+
+        if (!$data) {
+            return response()->json(['message' => 'Data not found'], 404);
+        }
+
+        return response()->json($data);
     }
 }

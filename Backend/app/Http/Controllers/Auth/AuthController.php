@@ -12,12 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-     // Show the login form
-     public function showLoginForm()
-     {
-         return view('auth.login');
-     }
-     
     // Register a new user and generate a JWT token
     public function register(Request $request)
     {
