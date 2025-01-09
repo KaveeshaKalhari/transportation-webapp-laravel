@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 // Public Routes
 Route::get('/data', [DataController::class, 'index'])->name('data.index');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register')->middleware('throttle:10,1');
+Route::post('/adminregister', [AuthController::class, 'adminRegister'])->name('auth.adminregister')->middleware('throttle:10,1');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login')->middleware('throttle:10,1');
 
 // Protected Routes using JWT
@@ -22,11 +23,13 @@ Route::middleware('auth:api')->group(function () {
         return $request->user();
     })->name('auth.user');
 
+    Route::middleware('can:manage-users')->group(function () {
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    });
+
 });
 
 
-Route::middleware('can:manage-users')->group(function () {
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-});
+

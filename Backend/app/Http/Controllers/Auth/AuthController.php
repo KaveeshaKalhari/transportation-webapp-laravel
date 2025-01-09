@@ -68,6 +68,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Login successful',
                 'user' => $user,
+                'role' => $user->role,
                 'token' => $token,
             ]);
         } catch (\Exception $e) {
@@ -111,5 +112,28 @@ class AuthController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'User deleted successfully'], 200);
+    }
+
+    public function adminRegister(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+            'role' => 'admin', // Set the role to admin
+        ]);
+
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 }

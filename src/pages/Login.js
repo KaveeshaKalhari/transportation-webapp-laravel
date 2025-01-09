@@ -48,7 +48,7 @@ const Login = () => {
 
   const handleAdminLogin = () => {
     // Redirect to the Admin Page when the Admin button is clicked
-    navigate('/admin');
+    navigate('/adminlogin');
   };
 
   return (
